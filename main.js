@@ -1,6 +1,55 @@
 import { Dog } from './classes/Dog.js';
 import { Monkey } from './classes/Monkey.js';
+import HelperFunctions from './helper_functions.js';
+import readline from 'readline';
 
-const myDog = new Dog("name", "breed", "gender", 1, 1, "2023-01-01", "country", "trained", true, "country", "tailLength", "height", "bodyLength");
+// Create a readline interface for user input
+// This allows us to read input from the console
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-myDog.printInfo();
+// Function to display the menu and handle user input
+// This function will be called recursively to keep showing the menu until the user quits
+function runMenu() { 
+    HelperFunctions.displayMenu();
+    rl.question("Enter a menu selection: ", (userInput) => {
+        switch (userInput.trim().toLowerCase()) {
+            case '1':
+                // Code to intake a new dog
+                console.log("Intake a new dog selected.");
+                break;
+            case '2':
+                // Code to intake a new monkey
+                console.log("Intake a new monkey selected.");
+                break;
+            case '3':
+                // Code to reserve an animal
+                console.log("Reserve an animal selected.");
+                break;
+            case '4':
+                // Code to print a list of all dogs
+                console.log("Print a list of all dogs selected.");
+                break;
+            case '5':
+                // Code to print a list of all monkeys
+                console.log("Print a list of all monkeys selected.");
+                break;
+            case '6':
+                // Code to print a list of all that are not reserved
+                console.log("Print a list of all that are not reserved selected.");
+                break;
+            case 'q':
+                console.log("Quitting application.");
+                rl.close();
+                return;
+            default:
+                console.log("Invalid selection. Please try again.");
+                break;
+        }
+        runMenu();
+    });
+}
+
+runMenu();
