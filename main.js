@@ -1,5 +1,7 @@
-import { Dog } from './classes/Dog.js';
-import { Monkey } from './classes/Monkey.js';
+import { Dog } from './models/Dog.js';
+import { Monkey } from './models/Monkey.js';
+import * as DogDAO from './dao/DogDAO.js';
+import * as MonkeyDAO from './dao/MonkeyDAO.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
 
@@ -19,6 +21,11 @@ function runMenu() {
             case '1':
                 // Code to intake a new dog
                 console.log("Intake a new dog selected.");
+                const myDog = new Dog('Jaxon', 'Mini', 'Male', 4,
+                    10.5, '2023-01-01', 'USA', 'Trained', false, 'USA');
+                DogDAO.addDog(myDog).then(() => {
+                    console.log("Dog added successfully.");
+                });
                 break;
             case '2':
                 // Code to intake a new monkey
@@ -52,4 +59,5 @@ function runMenu() {
     });
 }
 
+await DogDAO.createDogTable();
 runMenu();
