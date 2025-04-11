@@ -46,6 +46,12 @@ async function intakeNewDog() {
     });
 }
 
+async function printAllDogs() {
+    const dogs = await DogDAO.getAllDogs();
+    console.table(dogs);
+    runMenu();
+}
+
 // Function to display the menu and handle user input
 // This function will be called recursively to keep showing the menu until the user quits
 function runMenu() { 
@@ -66,8 +72,8 @@ function runMenu() {
                 break;
             case '4':
                 // Code to print a list of all dogs
-                console.log("Print a list of all dogs selected.");
-                break;
+                printAllDogs();
+                return;
             case '5':
                 // Code to print a list of all monkeys
                 console.log("Print a list of all monkeys selected.");
