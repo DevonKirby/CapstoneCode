@@ -1,5 +1,7 @@
 import { Dog } from './models/Dog.js';
+import { Trainer } from './data_structures/Trainer.js';
 import * as DogDAO from './dao/DogDAO.js';
+import * as DogService from './services/DogService.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
 
@@ -7,50 +9,9 @@ import readline from 'readline';
 // This allows us to read input from the console
 const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
+    terminal: false
 });
-
-async function intakeNewDog() {
-    console.log("\nEnter Dog Information");
-    console.log("Format: name, breed, gender[Male/Female], age,")
-    console.log("weight, acquisitionDate[YYYY-MM-DD], acquisitionCountry,")
-    console.log("trainingStatus[Trained/Untrained], reserved[true/false], inServiceCountry\n");
-
-    rl.question("Input: ", async (input) => {
-
-        const parts = input.split(',').map(part => part.trim());
-        if (parts.length !== 10) {
-            console.log("Invalid input. Please provide all 10 fields.");
-            runMenu();
-            return;
-        }
-
-        const [name, breed, gender, ageStr, weightStr, acquisitionDate,
-            acquisitionCountry, trainingStatus, reservedStr, inServiceCountry] = parts;
-        const age = parseInt(ageStr, 10);
-        const weight = parseFloat(weightStr);
-        const reserved = reservedStr.toLowerCase() === 'true';
-
-        if (isNaN(age) || isNaN(weight)) {
-            console.log("Invalid age or weight. Please enter valid numbers.");
-            runMenu();
-            return;
-        }
-
-        const newDog = new Dog(name, breed, gender, age, weight,
-            acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry);
-        
-        await DogDAO.addDog(newDog);
-
-        runMenu();
-    });
-}
-
-async function printAllDogs() {
-    const dogs = await DogDAO.getAllDogs();
-    console.table(dogs);
-    runMenu();
-}
 
 // Function to display the menu and handle user input
 // This function will be called recursively to keep showing the menu until the user quits
@@ -60,7 +21,7 @@ function runMenu() {
         switch (userInput.trim().toLowerCase()) {
             case '1':
                 // Code to intake a new dog
-                intakeNewDog();
+                DogService.intakeNewDog(runMenu);
                 return;
             case '2':
                 // Code to intake a new monkey
@@ -72,7 +33,7 @@ function runMenu() {
                 break;
             case '4':
                 // Code to print a list of all dogs
-                printAllDogs();
+                DogService.printAllDogs(runMenu);
                 return;
             case '5':
                 // Code to print a list of all monkeys
@@ -94,4 +55,5 @@ function runMenu() {
 }
 
 await DogDAO.createDogTable();
+const trainer = new Trainer();
 runMenu();

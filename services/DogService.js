@@ -4,7 +4,8 @@ import { Dog } from '../models/Dog.js';
 
 const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
+    terminal: false
 });
 
 export async function intakeNewDog(runMenu) {
@@ -18,7 +19,8 @@ export async function intakeNewDog(runMenu) {
         const parts = input.split(',').map(part => part.trim());
         if (parts.length !== 10) {
             console.log("Invalid input. Please provide all 10 fields.");
-            return runMenu();
+            runMenu();
+            return;
         }
 
         const [name, breed, gender, ageStr, weightStr, acquisitionDate,
@@ -29,19 +31,21 @@ export async function intakeNewDog(runMenu) {
 
         if (isNaN(age) || isNaN(weight)) {
             console.log("Invalid age or weight. Please enter valid numbers.");
-            return runMenu();
+            runMenu();
+            return;
         }
 
         const newDog = new Dog(name, breed, gender, age, weight,
             acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry);
         
-        try {
-            await DogDAO.addDog(newDog);
-            console.log("Dog added successfully.");
-        } catch (error) {
-            console.error("Error adding dog:", error);
-        } finally {
-            runMenu();
-        }
+        await DogDAO.addDog(newDog);
+
+        runMenu();
     });
+}
+
+export async function printAllDogs(runMenu) {
+    const dogs = await DogDAO.getAllDogs();
+    console.table(dogs);
+    runMenu();
 }
