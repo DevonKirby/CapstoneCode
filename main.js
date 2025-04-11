@@ -1,6 +1,8 @@
 import { Dog } from './models/Dog.js';
+import { Monkey } from './models/Monkey.js';
 import { Trainer } from './data_structures/Trainer.js';
 import * as DogService from './services/DogService.js';
+import * as MonkeyService from './services/MonkeyService.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
 
@@ -24,8 +26,8 @@ function runMenu() {
                 return;
             case '2':
                 // Code to intake a new monkey
-                console.log("Intake a new monkey selected.");
-                break;
+                MonkeyService.intakeNewMonkey(runMenu);
+                return;
             case '3':
                 // Code to reserve an animal
                 console.log("Reserve an animal selected.");
@@ -36,7 +38,7 @@ function runMenu() {
                 return;
             case '5':
                 // Code to print a list of all monkeys
-                console.log("Print a list of all monkeys selected.");
+                MonkeyService.printAllMonkeys(runMenu);
                 break;
             case '6':
                 // Code to print a list of all that are not reserved
@@ -48,7 +50,8 @@ function runMenu() {
                 return;
             default:
                 console.log("Invalid selection. Please try again.");
-                break;
+                runMenu();
+                return;
         }
     });
 }

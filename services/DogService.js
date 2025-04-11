@@ -8,6 +8,8 @@ const rl = readline.createInterface({
     terminal: false
 });
 
+// Function to intake a new dog
+// This function prompts the user for dog information and adds it to the database
 export async function intakeNewDog(runMenu) {
 
     await DogDAO.createDogTable();
@@ -47,6 +49,8 @@ export async function intakeNewDog(runMenu) {
     });
 }
 
+// Function to print all dogs
+// This function retrieves all dogs from the database and displays them in a table format
 export async function printAllDogs(runMenu) {
 
     await DogDAO.createDogTable();
