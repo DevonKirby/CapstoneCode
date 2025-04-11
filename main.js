@@ -1,7 +1,5 @@
 import { Dog } from './models/Dog.js';
-import { Monkey } from './models/Monkey.js';
 import * as DogDAO from './dao/DogDAO.js';
-import * as MonkeyDAO from './dao/MonkeyDAO.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
 
@@ -12,6 +10,42 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+async function intakeNewDog() {
+    console.log("\nEnter Dog Information");
+    console.log("Format: name, breed, gender[Male/Female], age,")
+    console.log("weight, acquisitionDate[YYYY-MM-DD], acquisitionCountry,")
+    console.log("trainingStatus[Trained/Untrained], reserved[true/false], inServiceCountry\n");
+
+    rl.question("Input: ", async (input) => {
+
+        const parts = input.split(',').map(part => part.trim());
+        if (parts.length !== 10) {
+            console.log("Invalid input. Please provide all 10 fields.");
+            runMenu();
+            return;
+        }
+
+        const [name, breed, gender, ageStr, weightStr, acquisitionDate,
+            acquisitionCountry, trainingStatus, reservedStr, inServiceCountry] = parts;
+        const age = parseInt(ageStr, 10);
+        const weight = parseFloat(weightStr);
+        const reserved = reservedStr.toLowerCase() === 'true';
+
+        if (isNaN(age) || isNaN(weight)) {
+            console.log("Invalid age or weight. Please enter valid numbers.");
+            runMenu();
+            return;
+        }
+
+        const newDog = new Dog(name, breed, gender, age, weight,
+            acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry);
+        
+        await DogDAO.addDog(newDog);
+
+        runMenu();
+    });
+}
+
 // Function to display the menu and handle user input
 // This function will be called recursively to keep showing the menu until the user quits
 function runMenu() { 
@@ -20,13 +54,8 @@ function runMenu() {
         switch (userInput.trim().toLowerCase()) {
             case '1':
                 // Code to intake a new dog
-                console.log("Intake a new dog selected.");
-                const myDog = new Dog('Jaxon', 'Mini', 'Male', 4,
-                    10.5, '2023-01-01', 'USA', 'Trained', false, 'USA');
-                DogDAO.addDog(myDog).then(() => {
-                    console.log("Dog added successfully.");
-                });
-                break;
+                intakeNewDog();
+                return;
             case '2':
                 // Code to intake a new monkey
                 console.log("Intake a new monkey selected.");
@@ -55,7 +84,6 @@ function runMenu() {
                 console.log("Invalid selection. Please try again.");
                 break;
         }
-        runMenu();
     });
 }
 

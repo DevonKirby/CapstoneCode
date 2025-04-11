@@ -34,6 +34,7 @@ export async function addDog(dog) {
             dog.getWeight(), dog.getAcquisitionDate(), dog.getAcquisitionCountry(),
             dog.getTrainingStatus(), dog.getReserved(), dog.getInServiceCountry()]
         );
+        console.log(`Dog ${dog.getName()} added successfully.`);
     } catch (error) {
         if (error.code === 'SQLITE_CONSTRAINT') {
             console.error(`Dog with name ${dog.getName()} already exists.`);
@@ -61,4 +62,44 @@ export async function updateDog(dog) {
     } catch (error) {
         console.error('Error updating dog:', error.message);
     }
+}
+
+// This function returns all dogs from the database.
+// It retrieves all dogs and maps them to Dog objects.
+export async function getAllDogs() {
+    const db = await openDB();
+    const rows = await db.all(`SELECT * FROM dogs`);
+
+    return rows.map(row => new Dog(
+        row.name,
+        row.breed,
+        row.gender,
+        row.age,
+        row.weight,
+        row.acquisition_date,
+        row.acquisition_country,
+        row.training_status,
+        row.reserved === 1,
+        row.in_service_country
+    ));
+}
+
+// This function returns a dog by its name from the database.
+// It retrieves the dog with the specified name and maps it to a Dog object.
+export async function getDogByName(name) {
+    const db = await openDB();
+    const row = await db.get(`SELECT * FROM dogs WHERE name = ?`, [name]);
+
+    return row.map(row => new Dog(
+        row.name,
+        row.breed,
+        row.gender,
+        row.age,
+        row.weight,
+        row.acquisition_date,
+        row.acquisition_country,
+        row.training_status,
+        row.reserved === 1,
+        row.in_service_country
+    ));
 }
