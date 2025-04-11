@@ -9,6 +9,9 @@ const rl = readline.createInterface({
 });
 
 export async function intakeNewDog(runMenu) {
+
+    await DogDAO.createDogTable();
+
     console.log("\nEnter Dog Information");
     console.log("Format: name, breed, gender[Male/Female], age,")
     console.log("weight, acquisitionDate[YYYY-MM-DD], acquisitionCountry,")
@@ -19,7 +22,7 @@ export async function intakeNewDog(runMenu) {
         const parts = input.split(',').map(part => part.trim());
         if (parts.length !== 10) {
             console.log("Invalid input. Please provide all 10 fields.");
-            runMenu();
+            intakeNewDog(runMenu);
             return;
         }
 
@@ -31,7 +34,7 @@ export async function intakeNewDog(runMenu) {
 
         if (isNaN(age) || isNaN(weight)) {
             console.log("Invalid age or weight. Please enter valid numbers.");
-            runMenu();
+            intakeNewDog(runMenu);
             return;
         }
 
@@ -45,6 +48,9 @@ export async function intakeNewDog(runMenu) {
 }
 
 export async function printAllDogs(runMenu) {
+
+    await DogDAO.createDogTable();
+
     const dogs = await DogDAO.getAllDogs();
     console.table(dogs);
     runMenu();

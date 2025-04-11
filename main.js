@@ -1,6 +1,5 @@
 import { Dog } from './models/Dog.js';
 import { Trainer } from './data_structures/Trainer.js';
-import * as DogDAO from './dao/DogDAO.js';
 import * as DogService from './services/DogService.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
@@ -54,6 +53,5 @@ function runMenu() {
     });
 }
 
-await DogDAO.createDogTable();
 const trainer = new Trainer();
 runMenu();
