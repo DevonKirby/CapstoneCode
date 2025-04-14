@@ -127,6 +127,27 @@ export async function getAvailableDogs() {
     ));
 }
 
+// This function returns a list of unavailable dogs from the database.
+// It retrieves all dogs that are reserved and maps them to Dog objects.
+export async function getUnavailableDogs() {
+    const db = await openDB();
+    const rows = await db.all(`SELECT * FROM dogs WHERE reserved = 1`);
+
+    return rows.map(row => new Dog(
+        row.id,
+        row.name,
+        row.breed,
+        row.gender,
+        row.age,
+        row.weight,
+        row.acquisition_date,
+        row.acquisition_country,
+        row.training_status,
+        row.reserved === 1,
+        row.in_service_country
+    ));
+}
+
 // This function reserves a dog by its ID in the database.
 // It updates the reserved status of the dog to true (1).
 export async function reserveDog(id) {
@@ -136,5 +157,17 @@ export async function reserveDog(id) {
         console.log(`Dog with ID ${id} has been reserved.`);
     } catch (error) {
         console.error('Error reserving dog:', error.message);
+    }
+}
+
+// This function unreserves a dog by its ID in the database.
+// It updates the reserved status of the dog to false (0).
+export async function unreserveDog(id) {
+    const db = await openDB();
+    try {
+        await db.run(`UPDATE dogs SET reserved = 0 WHERE id = ?`, [id]);
+        console.log(`Dog with ID ${id} has been unreserved.`);
+    } catch (error) {
+        console.error('Error unreserving dog:', error.message);
     }
 }

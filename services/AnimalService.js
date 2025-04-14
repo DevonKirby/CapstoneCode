@@ -174,6 +174,7 @@ export async function reserveAnimal(runMenu) {
                 animalId = parseInt(idInput, 10);
                 await DogDAO.reserveDog(animalId);
                 runMenu();
+                return;
             });
 
         // Logic to reserve a monkey
@@ -193,11 +194,70 @@ export async function reserveAnimal(runMenu) {
                 animalId = parseInt(idInput, 10);
                 await MonkeyDAO.reserveMonkey(animalId);
                 runMenu();
+                return;
             });
 
         } else {
             console.log("Invalid animal type. Please enter 'dog' or 'monkey'.");
             reserveAnimal(runMenu);
+        }
+    });
+}
+
+// Function to unreserve an animal
+// This function prompts the user to select a dog or monkey and unreserves it
+export async function unreserveAnimal(runMenu) {
+
+    await DogDAO.createDogTable();
+    await MonkeyDAO.createMonkeyTable();
+
+    rl.question("Dog or monkey: ", async (input) => {
+        const animalType = input.trim().toLowerCase();
+        let animalId;
+
+        // Logic to unreserve a dog
+        if (animalType === 'dog') {
+            const dogs = await DogDAO.getUnavailableDogs();
+            
+            // Condition if there are no dogs reserved
+            if (dogs.length === 0) {
+                console.log("No dogs to unreserve.");
+                runMenu();
+                return;
+            }
+
+            // Display all reserved dogs in a table format
+            console.table(dogs);
+            rl.question("Enter the ID of the dog to unreserve: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                await DogDAO.unreserveDog(animalId);
+                runMenu();
+                return;
+            });
+
+        // Logic to unreserve a monkey
+        } else if (animalType === 'monkey') {
+            const monkeys = await MonkeyDAO.getUnavailableMonkeys();
+
+            // Condition if there are no monkeys reserved
+            if (monkeys.length === 0) {
+                console.log("No monkeys to unreserve.");
+                runMenu();
+                return;
+            }
+
+            // Display all reserved monkeys in a table format
+            console.table(monkeys);
+            rl.question("Enter the ID of the monkey to unreserve: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                await MonkeyDAO.unreserveMonkey(animalId);
+                runMenu();
+                return;
+            });
+            
+        } else {
+            console.log("Invalid animal type. Please enter 'dog' or 'monkey'.");
+            unreserveAnimal(runMenu);
         }
     });
 }

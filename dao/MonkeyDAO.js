@@ -143,6 +143,30 @@ export async function getAvailableMonkeys() {
     ));
 }
 
+// This function returns a list of unavailable monkeys from the database.
+// It retrieves all monkeys that are reserved and maps them to Monkey objects.
+export async function getUnavailableMonkeys() {
+    const db = await openDB();
+    const rows = await db.all(`SELECT * FROM monkeys WHERE reserved = 1`);
+
+    return rows.map(row => new Monkey(
+        row.id,
+        row.name,
+        row.species,
+        row.gender,
+        row.age,
+        row.weight,
+        row.acquisition_date,
+        row.acquisition_country,
+        row.training_status,
+        row.reserved === 1,
+        row.in_service_country,
+        row.tail_length,
+        row.height,
+        row.body_length
+    ));
+}
+
 // This function reserves a monkey by its ID in the database.
 // It updates the reserved status of the monkey to true (1).
 export async function reserveMonkey(id) {
@@ -152,5 +176,17 @@ export async function reserveMonkey(id) {
         console.log(`Monkey with ID ${id} has been reserved.`);
     } catch (error) {
         console.error('Error reserving monkey:', error.message);
+    }
+}
+
+// This function unreserves a monkey by its ID in the database.
+// It updates the reserved status of the monkey to false (0).
+export async function unreserveMonkey(id) {
+    const db = await openDB();
+    try {
+        await db.run(`UPDATE monkeys SET reserved = 0 WHERE id = ?`, [id]);
+        console.log(`Monkey with ID ${id} has been unreserved.`);
+    } catch (error) {
+        console.error('Error unreserving monkey:', error.message);
     }
 }

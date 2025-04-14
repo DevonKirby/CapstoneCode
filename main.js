@@ -30,14 +30,18 @@ function runMenu() {
                 AnimalService.reserveAnimal(runMenu);
                 return;
             case '4':
+                // Code to unreserve an animal
+                AnimalService.unreserveAnimal(runMenu);
+                return;
+            case '5':
                 // Code to print a list of all dogs
                 AnimalService.printAllDogs(runMenu);
                 return;
-            case '5':
+            case '6':
                 // Code to print a list of all monkeys
                 AnimalService.printAllMonkeys(runMenu);
                 return;
-            case '6':
+            case '7':
                 // Code to print a list of all that are not reserved
                 AnimalService.printAvailableAnimals(runMenu);
                 return;
