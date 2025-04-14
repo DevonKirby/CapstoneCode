@@ -1,6 +1,5 @@
 import { Trainer } from './data_structures/Trainer.js';
 import * as AnimalService from './services/AnimalService.js';
-import * as MonkeyService from './services/MonkeyService.js';
 import HelperFunctions from './helper_functions.js';
 import readline from 'readline';
 
@@ -40,7 +39,7 @@ function runMenu() {
                 return;
             case '6':
                 // Code to print a list of all that are not reserved
-                console.log("Print all unreserved animals selected.");
+                AnimalService.printAvailableAnimals(runMenu);
                 return;
             case 'q':
                 console.log("Quitting application.");

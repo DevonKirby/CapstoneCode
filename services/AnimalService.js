@@ -122,12 +122,21 @@ export async function printAllMonkeys(runMenu) {
 
 // Function to print available dogs
 // This function retrieves all dogs from the database and filters out the reserved ones
-export async function printAvailableDogs(runMenu) {
+export async function printAvailableAnimals(runMenu) {
 
     await DogDAO.createDogTable();
+    await MonkeyDAO.createMonkeyTable();
 
     const dogs = await DogDAO.getAllDogs();
     const availableDogs = dogs.filter(dog => !dog.getReserved());
+
+    const monkeys = await MonkeyDAO.getAllMonkeys();
+    const availableMonkeys = monkeys.filter(monkey => !monkey.getReserved());
+
+    console.log(" === Available Dogs === ");
     console.table(availableDogs);
+    console.log();
+    console.log(" === Available Monkeys === ");
+    console.table(availableMonkeys);
     runMenu();
 }
