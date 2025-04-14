@@ -8,6 +8,7 @@ import { RescueAnimal } from './RescueAnimal.js';
 class Dog extends RescueAnimal {
 
     /**
+     * @param {int} id - The unique identifier for the dog
      * @param {string} name - The name of the dog
      * @param {string} breed - The breed of the dog
      * @param {string} gender - Male or Female
@@ -19,9 +20,9 @@ class Dog extends RescueAnimal {
      * @param {boolean} reserved - Indicates if the dog is reserved for service
      * @param {string} inServiceCountry - The country where the dog is in service
      */
-    constructor(name, breed, gender, age, weight, acquisitionDate,
+    constructor(id, name, breed, gender, age, weight, acquisitionDate,
         acquisitionCountry, trainingStatus, reserved, inServiceCountry) {
-            super(name, 'Dog', gender, age, weight, acquisitionDate,
+            super(id, name, 'Dog', gender, age, weight, acquisitionDate,
                 acquisitionCountry, trainingStatus, reserved, inServiceCountry);
             this.breed = breed;
         }

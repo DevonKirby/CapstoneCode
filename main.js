@@ -27,8 +27,8 @@ function runMenu() {
                 return;
             case '3':
                 // Code to reserve an animal
-                console.log("Reserve an animal selected.");
-                break;
+                AnimalService.reserveAnimal(runMenu);
+                return;
             case '4':
                 // Code to print a list of all dogs
                 AnimalService.printAllDogs(runMenu);

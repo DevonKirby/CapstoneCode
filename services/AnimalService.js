@@ -10,6 +10,8 @@ const rl = readline.createInterface({
     terminal: false
 });
 
+// Intake functions
+
 // Function to intake a new dog
 // This function prompts the user for dog information and adds it to the database
 export async function intakeNewDog(runMenu) {
@@ -42,7 +44,7 @@ export async function intakeNewDog(runMenu) {
             return;
         }
 
-        const newDog = new Dog(name, breed, gender, age, weight,
+        const newDog = new Dog(null, name, breed, gender, age, weight,
             acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry);
         
         await DogDAO.addDog(newDog);
@@ -88,7 +90,7 @@ export async function intakeNewMonkey(runMenu) {
             return;
         }
 
-        const newMonkey = new Monkey(name, species, gender, age, weight,
+        const newMonkey = new Monkey(null, name, species, gender, age, weight,
             acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry,
             tailLength, height, bodyLength);
         
@@ -97,6 +99,9 @@ export async function intakeNewMonkey(runMenu) {
         runMenu();
     });
 }
+
+
+// Print functions
 
 // Function to print all dogs
 // This function retrieves all dogs from the database and displays them in a table format
@@ -127,16 +132,72 @@ export async function printAvailableAnimals(runMenu) {
     await DogDAO.createDogTable();
     await MonkeyDAO.createMonkeyTable();
 
-    const dogs = await DogDAO.getAllDogs();
-    const availableDogs = dogs.filter(dog => !dog.getReserved());
-
-    const monkeys = await MonkeyDAO.getAllMonkeys();
-    const availableMonkeys = monkeys.filter(monkey => !monkey.getReserved());
+    const dogs = await DogDAO.getAvailableDogs();
+    const monkeys = await MonkeyDAO.getAvailableMonkeys();
 
     console.log(" === Available Dogs === ");
-    console.table(availableDogs);
+    console.table(dogs);
     console.log();
     console.log(" === Available Monkeys === ");
-    console.table(availableMonkeys);
+    console.table(monkeys);
     runMenu();
+}
+
+
+// Search functions
+
+// Function to reserve an animal
+// This function prompts the user to select a dog or monkey and reserves it
+export async function reserveAnimal(runMenu) {
+
+    await DogDAO.createDogTable();
+    await MonkeyDAO.createMonkeyTable();
+
+    rl.question("Dog or monkey: ", async (input) => {
+        const animalType = input.trim().toLowerCase();
+        let animalId;
+
+        // Logic to reserva a dog
+        if (animalType === 'dog') {
+            const dogs = await DogDAO.getAvailableDogs();
+            
+            // Condition if there are no dogs available
+            if (dogs.length === 0) {
+                console.log("No available dogs to reserve.");
+                runMenu();
+                return;
+            }
+
+            // Display available dogs in a table format
+            console.table(dogs);
+            rl.question("Enter the ID of the dog to reserve: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                await DogDAO.reserveDog(animalId);
+                runMenu();
+            });
+
+        // Logic to reserve a monkey
+        } else if (animalType === 'monkey') {
+            const monkeys = await MonkeyDAO.getAvailableMonkeys();
+
+            // Condition if there are no monkeys available
+            if (monkeys.length === 0) {
+                console.log("No available monkeys to reserve.");
+                runMenu();
+                return;
+            }
+
+            // Display available monkeys in a table format
+            console.table(monkeys);
+            rl.question("Enter the ID of the monkey to reserve: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                await MonkeyDAO.reserveMonkey(animalId);
+                runMenu();
+            });
+
+        } else {
+            console.log("Invalid animal type. Please enter 'dog' or 'monkey'.");
+            reserveAnimal(runMenu);
+        }
+    });
 }

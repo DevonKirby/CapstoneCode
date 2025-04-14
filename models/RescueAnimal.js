@@ -7,6 +7,7 @@
 class RescueAnimal {
 
     /**
+     * @param {int} id - The unique identifier for the animal
      * @param {string} name - The name of the animal
      * @param {string} animalType - The type of animal (e.g., dog, cat)
      * @param {string} gender - Male or Female
@@ -18,8 +19,9 @@ class RescueAnimal {
      * @param {boolean} reserved - Indicates if the animal is reserved for service
      * @param {string} inServiceCountry - The country where the animal is in service
      */
-    constructor(name, animalType, gender, age, weight, acquisitionDate,
+    constructor(id, name, animalType, gender, age, weight, acquisitionDate,
         acquisitionCountry, trainingStatus, reserved, inServiceCountry) {
+            this.id = id;
             this.name = name;
             this.animalType = animalType;
             this.gender = gender;

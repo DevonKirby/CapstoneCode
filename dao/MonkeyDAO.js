@@ -78,6 +78,7 @@ export async function getAllMonkeys() {
     const rows = await db.all(`SELECT * FROM monkeys`);
 
     return rows.map(row => new Monkey(
+        row.id,
         row.name,
         row.species,
         row.gender,
@@ -101,6 +102,7 @@ export async function getMonkeyByName(name) {
     const row = await db.get(`SELECT * FROM monkeys WHERE name = ?`, [name]);
 
     return row.map(row => new Monkey(
+        row.id,
         row.name,
         row.species,
         row.gender,
@@ -115,4 +117,40 @@ export async function getMonkeyByName(name) {
         row.height,
         row.body_length
     ));
+}
+
+// This function returns a list of available monkeys from the database.
+// It retrieves all monkeys that are not reserved and maps them to Monkey objects.
+export async function getAvailableMonkeys() {
+    const db = await openDB();
+    const rows = await db.all(`SELECT * FROM monkeys WHERE reserved = 0`);
+
+    return rows.map(row => new Monkey(
+        row.id,
+        row.name,
+        row.species,
+        row.gender,
+        row.age,
+        row.weight,
+        row.acquisition_date,
+        row.acquisition_country,
+        row.training_status,
+        row.reserved === 1,
+        row.in_service_country,
+        row.tail_length,
+        row.height,
+        row.body_length
+    ));
+}
+
+// This function reserves a monkey by its ID in the database.
+// It updates the reserved status of the monkey to true (1).
+export async function reserveMonkey(id) {
+    const db = await openDB();
+    try {
+        await db.run(`UPDATE monkeys SET reserved = 1 WHERE id = ?`, [id]);
+        console.log(`Monkey with ID ${id} has been reserved.`);
+    } catch (error) {
+        console.error('Error reserving monkey:', error.message);
+    }
 }

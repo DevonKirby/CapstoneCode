@@ -8,6 +8,7 @@ import { RescueAnimal } from './RescueAnimal.js';
 class Monkey extends RescueAnimal {
 
     /**
+     * @param {int} id - The unique identifier for the monkey
      * @param {string} name - The name of the monkey
      * @param {string} species - The species of the monkey
      * @param {string} gender - Male or Female
@@ -22,10 +23,10 @@ class Monkey extends RescueAnimal {
      * @param {float} height - The height of the monkey in cm
      * @param {float} bodyLength - The body length of the monkey in cm
      */
-    constructor(name, species, gender, age, weight, acquisitionDate,
+    constructor(id, name, species, gender, age, weight, acquisitionDate,
         acquisitionCountry, trainingStatus, reserved, inServiceCountry,
         tailLength, height, bodyLength) {
-            super(name, 'Monkey', gender, age, weight, acquisitionDate,
+            super(id, name, 'Monkey', gender, age, weight, acquisitionDate,
                 acquisitionCountry, trainingStatus, reserved, inServiceCountry);
             this.species = species;
             this.tailLength = tailLength;
