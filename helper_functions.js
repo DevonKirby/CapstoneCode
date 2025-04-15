@@ -12,6 +12,8 @@ const HelperFunctions = {
         console.log("[5] Print a list of all dogs");
         console.log("[6] Print a list of all monkeys");
         console.log("[7] Print a list of all that are not reserved");
+        console.log('[8] Add animal to training queue');
+        console.log("[9] Train next animal in queue");
         console.log("[q] Quit application");
         console.log();
     }

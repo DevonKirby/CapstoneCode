@@ -261,3 +261,84 @@ export async function unreserveAnimal(runMenu) {
         }
     });
 }
+
+
+// Training functions
+
+// Function to add an animal to the training queue
+export async function addAnimalToTrainingQueue(runMenu, trainer) {
+    await DogDAO.createDogTable();
+    await MonkeyDAO.createMonkeyTable();
+
+    rl.question("Dog or monkey: ", async (input) => {
+        const animalType = input.trim().toLowerCase();
+        let animalId;
+
+        // Logic to add a dog to the training queue
+        if (animalType === 'dog') {
+            const dogs = await DogDAO.getAllDogs();
+            
+            // Condition if there are no dogs available
+            if (dogs.length === 0) {
+                console.log("No available dogs to add to the training queue.");
+                runMenu();
+                return;
+            }
+
+            // Display available dogs in a table format
+            console.table(dogs);
+            rl.question("Enter the ID of the dog to add to the training queue: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                const animal = await DogDAO.getDogByID(animalId);
+                trainer.addAnimal(animal)
+                runMenu();
+                return;
+            });
+
+        // Logic to add a monkey to the training queue
+        } else if (animalType === 'monkey') {
+            const monkeys = await MonkeyDAO.getAllMonkeys();
+
+            // Condition if there are no monkeys available
+            if (monkeys.length === 0) {
+                console.log("No available monkeys to add to the training queue.");
+                runMenu();
+                return;
+            }
+
+            // Display available monkeys in a table format
+            console.table(monkeys);
+            rl.question("Enter the ID of the monkey to add to the training queue: ", async (idInput) => {
+                animalId = parseInt(idInput, 10);
+                const animal = await MonkeyDAO.getMonkeyByID(animalId);
+                trainer.addAnimal(animal)
+                runMenu();
+                return;
+            });
+
+        } else {
+            console.log("Invalid animal type. Please enter 'dog' or 'monkey'.");
+            addAnimalToTrainingQueue(runMenu, trainer);
+        }
+    });
+}
+
+export async function trainAnimal(runMenu, trainer) {
+
+    if (trainer.isEmpty()) {
+        console.log("No animals available for training.");
+        runMenu();
+        return;
+    }
+
+    const animal = trainer.trainAnimal(); // Get the first animal in the queue
+
+    if (animal.animalType === 'Dog') {
+        await DogDAO.updateDog(animal);
+    } else {
+        await MonkeyDAO.updateMonkey(animal);
+    }
+
+    console.log(`Trained animal: ${animal.name}`); // Display the trained animal
+    runMenu();
+}

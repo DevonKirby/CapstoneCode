@@ -25,7 +25,6 @@ class Trainer {
     }
 
     /**
-     * 
      * @returns {RescueAnimal} The trained animal.
      * @description Trains the first animal in the queue.
      * Removes the animal from the queue and updates its training status.

@@ -87,11 +87,11 @@ export async function getAllDogs() {
 
 // This function returns a dog by its name from the database.
 // It retrieves the dog with the specified name and maps it to a Dog object.
-export async function getDogByName(name) {
+export async function getDogByID(id) {
     const db = await openDB();
-    const row = await db.get(`SELECT * FROM dogs WHERE name = ?`, [name]);
+    const row = await db.get(`SELECT * FROM dogs WHERE id = ?`, [id]);
 
-    return row.map(row => new Dog(
+    return new Dog(
         row.id,
         row.name,
         row.breed,
@@ -103,7 +103,7 @@ export async function getDogByName(name) {
         row.training_status,
         row.reserved === 1,
         row.in_service_country
-    ));
+    )
 }
 
 // This function returns a list of available dogs from the database.

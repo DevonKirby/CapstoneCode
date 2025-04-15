@@ -45,6 +45,14 @@ function runMenu() {
                 // Code to print a list of all that are not reserved
                 AnimalService.printAvailableAnimals(runMenu);
                 return;
+            case '8':
+                // Code to add animal to training queue
+                AnimalService.addAnimalToTrainingQueue(runMenu, trainer);
+                return;
+            case '9':
+                // Code to train next animal in queue
+                AnimalService.trainAnimal(runMenu, trainer);
+                return;
             case 'q':
                 console.log("Quitting application.");
                 rl.close();
