@@ -97,11 +97,11 @@ export async function getAllMonkeys() {
 
 // This function returns a monkey by its name from the database.
 // It retrieves the monkey and maps it to a Monkey object.
-export async function getMonkeyByName(name) {
+export async function getMonkeyByID(id) {
     const db = await openDB();
-    const row = await db.get(`SELECT * FROM monkeys WHERE name = ?`, [name]);
+    const row = await db.get(`SELECT * FROM monkeys WHERE id = ?`, [id]);
 
-    return row.map(row => new Monkey(
+    return new Monkey(
         row.id,
         row.name,
         row.species,
@@ -116,7 +116,7 @@ export async function getMonkeyByName(name) {
         row.tail_length,
         row.height,
         row.body_length
-    ));
+    );
 }
 
 // This function returns a list of available monkeys from the database.
